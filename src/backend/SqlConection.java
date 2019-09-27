@@ -14,7 +14,7 @@ import exceptions.ErrorCreacionUsuario;
 
 public class SqlConection {
     
-    Connection conexion;
+    private static Connection conexion;
     
     private final String SQL_USER="admin-revistas";
     private final String PASSWORD="12345";
@@ -23,14 +23,24 @@ public class SqlConection {
     
     public SqlConection() {
 	try {
-	   this.conexion = DriverManager.getConnection(SQL_PORT+DATABASE_NAME, SQL_USER, PASSWORD);
-	   System.out.println("Exito");
+	    if(conexion==null) {
+		Class.forName("org.mariadb.jdbc.Driver"); 
+		conexion = DriverManager.getConnection(SQL_PORT+DATABASE_NAME, SQL_USER, PASSWORD);
+	    }
 	} catch (SQLException e) {
-	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (ClassNotFoundException e) {
 	    e.printStackTrace();
 	}
     }
     
+    /**
+     * @return the conexion
+     */
+    public static Connection getConexion() {
+        return conexion;
+    }
+
 	/**
 	 * Escribe nuevos registros en la base de datos 
 	 * @param table
@@ -79,12 +89,34 @@ public class SqlConection {
 		 PreparedStatement sentencia = conexion.prepareStatement("SELECT * FROM Usuario WHERE correo_electronico=?");
 		 sentencia.setString(1, email);
 		 consulta=sentencia.executeQuery();
-		 password= consulta.getString(1);
+		 consulta.next();
+		 password= consulta.getString(4);
 	    } catch (SQLException e) {
 		e.printStackTrace();
 	    }
 	    return password;
 	}
+	
+	/**
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public int leerTipoDeUsuario(String email) {
+	    ResultSet consulta = null;
+	    int tipoDeUsuario = 0;
+	    try {
+		 PreparedStatement sentencia = conexion.prepareStatement("SELECT tipo_de_usuario FROM Usuario WHERE correo_electronico=?");
+		 sentencia.setString(1, email);
+		 consulta=sentencia.executeQuery();
+		 consulta.next();
+		 tipoDeUsuario= consulta.getInt(1);
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
+	    return tipoDeUsuario;
+	}
+	
 	
 	/**
 	 * Obtiene el maximo valor de una tabla
@@ -112,23 +144,23 @@ public class SqlConection {
 	 */
 	public void transaccion(ArrayList<String> sentencias) {
 	    try {
-		this.conexion.setAutoCommit(false);
+		conexion.setAutoCommit(false);
 		for (int i = 0; i < sentencias.size(); i++) {
-		    Statement sentencia = this.conexion.createStatement();
+		    Statement sentencia = conexion.createStatement();
 		    	sentencia.executeUpdate(sentencias.get(i));
 		}
 		JOptionPane.showMessageDialog(null, "Ingreso con exito");
 	    } catch (SQLException e) {
 		e.printStackTrace();
 		try {
-		    this.conexion.rollback();
+		    conexion.rollback();
 		} catch (SQLException e1) {
 		    e1.printStackTrace();
 		}
 		JOptionPane.showMessageDialog(null, "No se completo la transaccion, intente de nuevo");
 	    } finally {
 		try {
-		    this.conexion.setAutoCommit(true);
+		    conexion.setAutoCommit(true);
 		} catch (SQLException e2) {
 		    e2.printStackTrace();
 		    JOptionPane.showMessageDialog(null, "Ocurrio un error durante el cirre de la conexion");
@@ -152,44 +184,30 @@ public class SqlConection {
 	    }
 	}
 
-	/**
-	 * @return the conexion
-	 */
-	public Connection getConexion() {
-	    return conexion;
-	}
 
-	/**
-	 * @param conexion the conexion to set
-	 */
-	public void setConexion(Connection conexion) {
-	    this.conexion = conexion;
-	}
-	
 	public void escribirRegistro(Perfil perfil)  throws ErrorCreacionUsuario, SQLException{
 		int ultimoRegistro= getUltimo("Usuario", "id_usuario");
-		int siguienteRegistro = ultimoRegistro++;
+		int siguienteUsuario = ultimoRegistro+1;
+		int ultimaCuenta = getUltimo("Cuenta", "id_cuenta");
+		int siguienteCuenta = ultimaCuenta+1;
+		System.out.println(siguienteUsuario);
+	        PreparedStatement statementPerfil = perfil.crearSentencia(siguienteUsuario, siguienteCuenta);
 		Usuario usuario = (Usuario) perfil;
-	        PreparedStatement statementUsuario= usuario.crearSentencia(this, siguienteRegistro);
-	        PreparedStatement statementPerfil = perfil.crearSentencia(this, siguienteRegistro);
+	        PreparedStatement statementUsuario= usuario.crearSentencia(siguienteUsuario);
+	        Cuenta cuenta = new Cuenta();
+	        PreparedStatement statementCuenta = cuenta.crearSentencia();
 		try {
-		    	getConexion().setAutoCommit(false);
+		    	conexion.setAutoCommit(false);		    	
 		    	// Envia las sentencias la servidor
 		        statementUsuario.executeUpdate();
+		        statementCuenta.executeUpdate();
 		        statementPerfil.executeUpdate();
-		        getConexion().commit();
+		        conexion.commit();
 		} catch (SQLException ex) {
-		    getConexion().rollback();
+		    conexion.rollback();
 		    throw new ErrorCreacionUsuario("ERROR: " + ex.getMessage());
 		}finally {
-		    getConexion().setAutoCommit(true);
-	            if (getConexion() != null) {
-	                try {
-	                    getConexion().close();
-	                } catch (SQLException ex) {
-	                    ex.printStackTrace();
-	                }
-	            }	
+		    conexion.setAutoCommit(true);
 	    }
 	    }
 }

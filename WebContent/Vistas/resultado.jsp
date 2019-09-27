@@ -6,14 +6,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Registro exitoso</title>
+<%@include file="/style/style.html"%>
 </head>
 <body>
-        <h2>registro completo</h2>
-        Nombre: <%=perfil.getNombre()%>
-        <br>
-        Gustos: <%=perfil.getGustos()%>
-        <br>
+		<%@include file = "encabezado.html" %>
+        <h2>Registro realizado con exito</h2>
+        <p> Ahora debe iniciar <a href="Login.jsp">sesion</a></p>
         <%
             //out.print(session.getAttribute("user"));
         %>

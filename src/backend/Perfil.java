@@ -5,14 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import backend.controlators.ControladorRegistro;
-import exceptions.ErrorCreacionUsuario;
 
 public class Perfil extends Usuario{
     
-    private String tarjetaDeCredito;
+    private String idCuenta;
     private String hobbies; 
     private String gustos;
     private InputStream fotografia; 
@@ -24,15 +20,15 @@ public class Perfil extends Usuario{
     /**
      * @return the tarjetaDeCredito
      */
-    public String getTarjetaDeCredito() {
-        return tarjetaDeCredito;
+    public String getIdCuenta() {
+        return idCuenta;
     }
 
     /**
      * @param tarjetaDeCredito the tarjetaDeCredito to set
      */
     public void setTarjetaDeCredito(String tarjetaDeCredito) {
-        this.tarjetaDeCredito = tarjetaDeCredito;
+        this.idCuenta = tarjetaDeCredito;
     }
 
     /**
@@ -62,7 +58,7 @@ public class Perfil extends Usuario{
     public Perfil(String nombre, String email, String password, int tipoDeUsuario, String tarjetaDeCredito,String hobbies, String gustos, InputStream fotografia,
 	    String lugarDeResidencia, String telefono, String genero, String idioma) {
 	super(nombre, email, password, tipoDeUsuario);
-	this.tarjetaDeCredito= tarjetaDeCredito;
+	this.idCuenta= tarjetaDeCredito;
 	this.hobbies = hobbies;
 	this.gustos = gustos;
 	this.fotografia = fotografia;
@@ -73,16 +69,26 @@ public class Perfil extends Usuario{
     }
     
     public Perfil(HttpServletRequest request) {
-	super(request.getParameter("nombre"), request.getParameter("email"), request.getParameter("password"),
-		Integer.parseInt(request.getParameter("tipo-de-usuario")));
+	super(request.getParameter("nombre"), request.getParameter("email"), request.getParameter("password"), getTipoUsuario(request));
 	this.hobbies=request.getParameter("hobbies");
 	this.gustos=request.getParameter("gustos");
 	this.lugarDeResidencia=request.getParameter("lugarDeResidencia");
 	this.telefono=request.getParameter("telefono");
 	this.genero=request.getParameter("genero");
 	this.idioma=request.getParameter("idioma");
-	
     }
+    
+    public static int getTipoUsuario(HttpServletRequest request) {
+	System.out.println("Nomre: "+request.getParameter("nombre"));
+	System.out.println("Email "+ request.getParameter("email"));
+	System.out.println("Hobbies "+ request.getParameter("hobbies"));
+	System.out.println("Gustos "+ request.getParameter("gustos"));
+	System.out.println("Idioma "+ request.getParameter("idioma"));
+	String tipo = request.getParameter("tipo-de-usuario");
+	System.out.println("Tipo de Usuario " + tipo);
+	return Integer.parseInt(tipo);
+    }
+    
     
     /**
      * @return the hobbies
@@ -170,14 +176,14 @@ public class Perfil extends Usuario{
     }
     
     
-    public PreparedStatement  crearSentencia(SqlConection conexion, int siguienteRegistro) throws SQLException {
-	String sqlPerfil = "INSERT INTO Perfil(id_usuario, tarjeta_de_credito, hobbies, gustos, fotografia, lugar_de_residencia, numero_de_telefono, genero, idioma)"
+    public PreparedStatement  crearSentencia(int siguienteRegistro,int siguienteCuenta) throws SQLException {
+	String sqlPerfil = "INSERT INTO Perfil(id_usuario, id_cuenta, hobbies, gustos, fotografia, lugar_de_residencia, numero_de_telefono, genero, idioma)"
 		+ "values (?,?,?,?,?,?,?,?,?)";
         PreparedStatement statementPerfil=null; 
-	 statementPerfil = conexion.getConexion().prepareStatement(sqlPerfil);
+	 statementPerfil = SqlConection.getConexion().prepareStatement(sqlPerfil);
 	        //ultimo registro en la base de datos
 	        statementPerfil.setInt(1, siguienteRegistro);
-	        statementPerfil.setString(2, this.getTarjetaDeCredito());
+	        statementPerfil.setInt(2, siguienteCuenta);
 	        statementPerfil.setString(3, this.getHobbies());
 	        statementPerfil.setString(4, this.getGustos());
 	        statementPerfil.setBlob(5, this.getFotografia());

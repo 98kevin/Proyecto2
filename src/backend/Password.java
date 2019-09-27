@@ -33,13 +33,13 @@ public class Password {
         return new SecretKeySpec(keyTmp.getEncoded(), "AES");
     }
 
-    public String encriptar(String property) throws GeneralSecurityException, UnsupportedEncodingException {
+    public String encriptar(String pass) throws GeneralSecurityException, UnsupportedEncodingException {
     	SecretKeySpec key = createSecretKey(password.toCharArray());
     	Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         pbeCipher.init(Cipher.ENCRYPT_MODE, key);
         AlgorithmParameters parameters = pbeCipher.getParameters();
         IvParameterSpec ivParameterSpec = parameters.getParameterSpec(IvParameterSpec.class);
-        byte[] cryptoText = pbeCipher.doFinal(property.getBytes("UTF-8"));
+        byte[] cryptoText = pbeCipher.doFinal(pass.getBytes("UTF-8"));
         byte[] iv = ivParameterSpec.getIV();
         return base64Encode(iv) + ":" + base64Encode(cryptoText);
     }
@@ -48,10 +48,10 @@ public class Password {
         return Base64.getEncoder().encodeToString(bytes);
     }
 
-    public String desencriptar(String string) throws GeneralSecurityException, IOException {
+    public String desencriptar(String pass) throws GeneralSecurityException, IOException {
     	SecretKeySpec key = createSecretKey(password.toCharArray());
-        String iv = string.split(":")[0];
-        String property = string.split(":")[1];
+        String iv = pass.split(":")[0];
+        String property = pass.split(":")[1];
         Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         pbeCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(base64Decode(iv)));
         return new String(pbeCipher.doFinal(base64Decode(property)), "UTF-8");
@@ -64,10 +64,10 @@ public class Password {
     public boolean aceptada(String claveIngresada,String claveEnSistema) {
     	boolean result=false;
     	try {
-			result = (claveIngresada.equals(desencriptar(claveEnSistema)));
-		} catch (GeneralSecurityException | IOException e) {
-			e.printStackTrace();
-		}
+		result = (claveIngresada.equals(desencriptar(claveEnSistema)));
+    	} catch (GeneralSecurityException | IOException e) {
+    	    e.printStackTrace();
+    	}	
     	return result;
     }
 }

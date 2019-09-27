@@ -8,47 +8,19 @@
 		<title>Registro de nuevo usuario</title>
 		<%@include file="../js/scripts.html" %>
 		 <link rel="stylesheet" type="text/css" href="../style/style-registro.css">
+		 <%@include file="../style/style.html" %>
 	</head>
 	<body>
 	<%@include file="encabezado.html" %>
 		<form name="formulario-registro" action="Controlador-Registro" method="post" enctype="multipart/form-data">
-			<p>Nombre<br>
-			  	<input type="text" name="nombre" required><br>
-			  	</p>
+			Nombre
+			  	<input class="form-control" type="text" name="nombre" required><br>
 			  	<%@include file="credenciales.html" %>
 			  	<%@include file="formulario-perfil.html" %>
+			  	<p>Al hacer clic acepta nuestros <a href="terminos-y-condiciones.jsp">terminos y condiciones</a> </p>
 		  		<button type="submit" class="btn btn-primary">Registrar</button> 
 		</form><br><br><br><br>
 
-		   <c:if test="${requestScope['error'] != null}">
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#InfoModal').modal('show');
-                });
-            </script>
-        </c:if>
-
-        <div class="modal fade" id="InfoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Error</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Error en la creacion del cliente
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-		
-		
-		<%@include file="pie-de-pagina.html" %>
 		</body>
-		<script src="../js/script-registro.js"></script>
+	<script src="../js/script-registro.js"></script>
 </html>

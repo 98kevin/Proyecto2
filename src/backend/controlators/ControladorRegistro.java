@@ -20,16 +20,20 @@ import exceptions.ErrorCreacionUsuario;
 @MultipartConfig(maxFileSize = 1000000)    // upload file's size up to 1 MB
 @WebServlet("/Vistas/Controlador-Registro")
 public class ControladorRegistro extends HttpServlet{
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 256240027249774542L;
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	Perfil perfil = new Perfil(request);
 	InputStream inputStream = null; // input stream de la carga de la fotografia
 	// obtenemos la parte del arhivo subido  en esta parte multiple del request
         Part filePart = request.getPart("fotografia");
-        if (filePart != null) {             
+        if (filePart != null)              
             // Obtenemos el input stream del archivo cargador
             inputStream = filePart.getInputStream();
-        }
 	perfil.setFotografia(inputStream);
 	try {
 	    SqlConection conexion = new SqlConection();

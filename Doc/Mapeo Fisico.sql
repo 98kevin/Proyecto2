@@ -111,7 +111,7 @@ ENGINE = InnoDB;
 -- Table `Revistas`.`Cuenta`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Revistas`.`Cuenta` (
-  `tarjeta_de_credito` VARCHAR(15) CHARACTER SET 'binary' NOT NULL,
+  `id_cuenta` INT NOT NULL AUTO_INCREMENT,
   `abonos` DOUBLE NULL,
   PRIMARY KEY (`tarjeta_de_credito`))
 ENGINE = InnoDB;
@@ -147,11 +147,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Revistas`.`Sistema` (
   `porcentaje_de_ganancia` INT NULL,
-  `tarjeta_de_credito` VARCHAR(15) CHARACTER SET 'binary' NOT NULL,
-  PRIMARY KEY (`tarjeta_de_credito`),
-  CONSTRAINT `FK_SISTEMA`
-    FOREIGN KEY (`tarjeta_de_credito`)
-    REFERENCES `Revistas`.`Cuenta` (`tarjeta_de_credito`)
+  `id_cuenta` INT NOT NULL,
+  CONSTRAINT `FK_CUENTA_SISTEMA` 
+    FOREIGN KEY (`id_cuenta`)
+    REFERENCES `Revistas`.`Cuenta` (`id_cuenta`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -214,10 +213,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Revistas`.`Perfil` (
   `id_usuario` INT NOT NULL,
-  `tarjeta_de_credito` VARCHAR(15) NOT NULL,
+  `id_cuenta` INT NOT NULL,
   `hobbies` VARCHAR(45) NULL,
   `gustos` VARCHAR(45) NULL,
-  `fotografia` BLOB NULL,
+  `fotografia` MEDIUMBLOB NULL,
   `lugar_de_residencia` VARCHAR(45) NULL,
   `numero_de_telefono` VARCHAR(15) NULL,
   `genero` VARCHAR(10) NULL,
@@ -230,9 +229,9 @@ CREATE TABLE IF NOT EXISTS `Revistas`.`Perfil` (
     REFERENCES `Revistas`.`Usuario` (`id_usuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `FK_TARJETA_CREDITO`
-    FOREIGN KEY (`tarjeta_de_credito`)
-    REFERENCES `Revistas`.`Cuenta` (`tarjeta_de_credito`)
+  CONSTRAINT `FK_CUENTA`
+    FOREIGN KEY (`id_cuenta`)
+    REFERENCES `Revistas`.`Cuenta` (`id_cuenta`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
