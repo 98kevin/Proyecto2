@@ -14,7 +14,7 @@
         <h2>Registro realizado con exito</h2>
         <p> Ahora debe iniciar <a href="Login.jsp">sesion</a></p>
         <%
-            //out.print(session.getAttribute("user"));
+            out.print(session.getAttribute("user"));
         %>
 </body>
 </html>

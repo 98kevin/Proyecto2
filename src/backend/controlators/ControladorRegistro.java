@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import backend.Perfil;
@@ -37,7 +38,7 @@ public class ControladorRegistro extends HttpServlet{
 	perfil.setFotografia(inputStream);
 	try {
 	    SqlConection conexion = new SqlConection();
-	    conexion.escribirRegistro(perfil);
+	    conexion.escribirNuevoPerfil(perfil);
 	    RequestDispatcher dispatcher = request.getRequestDispatcher("resultado.jsp");
             dispatcher.forward(request, response);
 	} catch (ErrorCreacionUsuario | SQLException  e) {

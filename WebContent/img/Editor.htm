@@ -1,22 +1,25 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+
+      
 <!DOCTYPE html>
 
 <html>
 	<head>
-		<%@include file="../style/style.html" %>
-		<%@include file = "encabezado.html" %>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<style>
+header { color: #f3eeec;
+	 background-color:#5f929e;}
+</style>
+<header class="page-header"  >
+<h1 >Revistas</h1>
+<h2>Donde usted puede suscribirse a sus revistas preferidas</h2>
+</header>
+
 		<link rel=StyleSheet href="../style/admin-style.css" type="text/css" >
 		<title>Editor</title>
 	</head>
 	<body>
 	
-	        <c:if test="${requestScope['exito'] == true}">
-	            <script type="text/javascript">
-	                alert("Registro realizado con exito");
-	            </script>
-        	</c:if>
+	        
 	
 		<div id="header">
 			<ul class="nav">
@@ -42,7 +45,7 @@
 						<li><a href="">Ganacias</a></li>
 					</ul>
 				</li>
-				<li><a href="">${sessionScope.email} </a>
+				<li><a href="">dianamial </a>
 					<ul>
 						<li><a href="">Ayuda</a></li>
 						<li><a href="">Salir</a></li>

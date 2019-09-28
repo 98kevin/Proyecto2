@@ -13,7 +13,6 @@ public class Usuario {
     	private final int EDITOR=2;
     	private final int ADMINISTRADOR=3;
     	
-    
 	private String nombre;
 	private String email;
 	private String password;

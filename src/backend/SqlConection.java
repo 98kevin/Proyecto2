@@ -185,7 +185,7 @@ public class SqlConection {
 	}
 
 
-	public void escribirRegistro(Perfil perfil)  throws ErrorCreacionUsuario, SQLException{
+	public void escribirNuevoPerfil(Perfil perfil)  throws ErrorCreacionUsuario, SQLException{
 		int ultimoRegistro= getUltimo("Usuario", "id_usuario");
 		int siguienteUsuario = ultimoRegistro+1;
 		int ultimaCuenta = getUltimo("Cuenta", "id_cuenta");
@@ -210,4 +210,42 @@ public class SqlConection {
 		    conexion.setAutoCommit(true);
 	    }
 	    }
+
+	public int consultarEditor(String email) {
+	    ResultSet consulta = null;
+	    int codigo = -1;
+	    try {
+		 PreparedStatement sentencia = conexion.prepareStatement("SELECT * FROM Usuario WHERE correo_electronico=?");
+		 sentencia.setString(1, email);
+		 consulta=sentencia.executeQuery();
+		 consulta.next();
+		 codigo= consulta.getInt(1);
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
+	    return codigo;
+	}
+
+	public void escribirNuevaRevista(Revista revista) throws SQLException {
+		int ultimaRevista= getUltimo("Revista", "codigo");
+		int siguienteRevista = ultimaRevista+1;
+		int ultimosPermisos = getUltimo("Permisos", "id_permisos");
+		int siguientesPermisos = ultimosPermisos+1;
+	        PreparedStatement statementRevista = revista.crearSentencia(siguienteRevista, siguientesPermisos);
+	        Permiso permiso = new Permiso(siguientesPermisos);
+	        PreparedStatement statementPermiso = permiso.crearSentencia();
+		try {
+		    	conexion.setAutoCommit(false);		    	
+		    	// Envia las sentencias la servidor
+		        statementPermiso.executeUpdate();
+		        statementRevista.executeUpdate();
+		        conexion.commit();
+		        System.out.println("Commit de revistas realizada");
+		} catch (SQLException ex) {
+		    ex.printStackTrace();
+		    conexion.rollback();
+		}finally {
+		    conexion.setAutoCommit(true);
+	    }
+	}
 }

@@ -25,8 +25,10 @@ public class ControladorSesion extends HttpServlet{
 	String recurso="error.jsp";
 	if(acceso) 
 	    recurso= usuario.getRecurso();
-	HttpSession sesion = request.getSession();
-	sesion.setAttribute("nombre-usuario", usuario.getNombre());
+	    //manejo de la sesion
+	    HttpSession session= request.getSession();
+	    session.setAttribute("email", usuario.getEmail());
+	    System.out.println("Usuario: "+usuario.getEmail());
 	response.sendRedirect(recurso);
     }
 }
