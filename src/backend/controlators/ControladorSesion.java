@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import backend.SqlConection;
 import backend.Usuario;
 
 @WebServlet("/Vistas/Controlador-sesion")
@@ -28,6 +29,7 @@ public class ControladorSesion extends HttpServlet{
 	    //manejo de la sesion
 	    HttpSession session= request.getSession();
 	    session.setAttribute("email", usuario.getEmail());
+	    session.setAttribute("codigo", new SqlConection().consultarCodigoUsuario(usuario.getEmail()));
 	    System.out.println("Usuario: "+usuario.getEmail());
 	response.sendRedirect(recurso);
     }

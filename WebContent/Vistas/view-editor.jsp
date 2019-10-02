@@ -30,7 +30,7 @@
 				<li><a href="">Revistas</a>
 					<ul>
 						<li><a href="creacion-de-revista.jsp">Crear nueva revista</a></li>
-						<li><a href="">Subir Edicion</a></li>
+						<li><a href="revistas-de-editor.jsp">Mis revistas</a></li>
 						<li><a href="">Buscar</a></li>
 					</ul>
 				</li>

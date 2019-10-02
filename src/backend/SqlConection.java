@@ -1,13 +1,18 @@
 package backend;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.sql.Date;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.swing.JOptionPane;
 
 import exceptions.ErrorCreacionUsuario;
@@ -41,6 +46,26 @@ public class SqlConection {
         return conexion;
     }
 
+    public static ArrayList<Revista> leerRevistasDeEditor(int codigo) {
+	ArrayList<Revista> revistas= null;; 
+	ResultSet resultado = null;
+		String sqlInstruccion = "SELECT * FROM Revista WHERE id_editor=?";
+		 try {
+		    PreparedStatement sentencia = new SqlConection().conexion.prepareStatement(sqlInstruccion);
+		    sentencia.setInt(1, codigo);
+		    resultado = sentencia.executeQuery();
+		    revistas = new ArrayList<Revista>();
+		    while (resultado.next()) {
+			Revista revista = new Revista(resultado);
+			revistas.add(revista);
+		    }
+		} catch (SQLException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
+	return revistas;
+    }
+    
 	/**
 	 * Escribe nuevos registros en la base de datos 
 	 * @param table
@@ -211,7 +236,12 @@ public class SqlConection {
 	    }
 	    }
 
-	public int consultarEditor(String email) {
+	/**
+	 * Consulta la llave primaria de un editor, en base a su correo electronico
+	 * @param email
+	 * @return
+	 */
+	public int consultarCodigoUsuario(String email) {
 	    ResultSet consulta = null;
 	    int codigo = -1;
 	    try {
@@ -225,7 +255,12 @@ public class SqlConection {
 	    }
 	    return codigo;
 	}
-
+	
+	/**
+	 * Escribe una nueva revista en la base de datos 
+	 * @param revista
+	 * @throws SQLException
+	 */
 	public void escribirNuevaRevista(Revista revista) throws SQLException {
 		int ultimaRevista= getUltimo("Revista", "codigo");
 		int siguienteRevista = ultimaRevista+1;
@@ -247,5 +282,30 @@ public class SqlConection {
 		}finally {
 		    conexion.setAutoCommit(true);
 	    }
+	}
+
+	public void escribirPublicacion(HttpServletRequest request, InputStream contenidoRevista) throws SQLException, ParseException {
+	    int ultimaPublicacion= getUltimo("Publicacion", "idPublicacion");
+		int siguientePublicacion = ultimaPublicacion+1;
+		String sql = "INSERT INTO Publicacion (idPublicacion, contenido, fecha_de_publicacion, codigo_revista) values (?,?,?,?)";
+	        PreparedStatement statementPublicacion = conexion.prepareStatement(sql);
+	        statementPublicacion.setInt(1, siguientePublicacion);
+	        statementPublicacion.setBlob(2, contenidoRevista);
+	        String startDateStr = request.getParameter("date");
+	        System.out.println("fecha leida del parametro: "+ startDateStr);
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	        java.util.Date fecha = sdf.parse(startDateStr); // you will get date here
+	        statementPublicacion.setDate(3, new Date(fecha.getTime()));
+	        int codigoRevista = ((Revista)request.getSession().getAttribute("revista")).getCodigo();
+	        statementPublicacion.setInt(4, codigoRevista);
+		try {   	
+		    	// Envia las sentencias la servidor
+		    	statementPublicacion.executeUpdate();
+		        System.out.println("Commit de revistas realizada");
+		} catch (SQLException ex) {
+		    ex.printStackTrace();
+		    conexion.rollback();
+		}
+	    
 	}
 }

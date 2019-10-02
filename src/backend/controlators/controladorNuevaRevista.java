@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import backend.Archivos;
 import backend.Revista;
 import backend.SqlConection;
 import exceptions.ErrorCreacionUsuario;
@@ -29,6 +30,7 @@ public class controladorNuevaRevista extends HttpServlet{
 	try {
 	    SqlConection conexion = new SqlConection();
 	    conexion.escribirNuevaRevista(revista);
+	    Archivos.generarJspRevista(revista);
 	    request.setAttribute("exito", true);
 	    response.sendRedirect("view-editor.jsp");
 	} catch (SQLException  e) {

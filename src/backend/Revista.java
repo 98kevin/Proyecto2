@@ -1,20 +1,28 @@
 package backend;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class Revista {
-    String nombre; 
-    String descripcion; 
-    String etiquetas; 
-    double cuotaSuscripcion; 
-    double costoDiario;
-    int categoria; 
-    int editor;
+public class Revista implements Serializable {
+    int codigo;
 
-
+    private String nombre; 
+    private String descripcion; 
+    private String etiquetas; 
+    private double cuotaSuscripcion; 
+    private double costoDiario;
+    private int categoria; 
+    private int editor;
+     
+    
+    public Revista() {
+	super();
+    }
+    
     
     /**
      * @return the nombre
@@ -23,7 +31,21 @@ public class Revista {
         return nombre;
     }
 
+    /**
+     * @return the codigo
+     */
+    public int getCodigo() {
+        return codigo;
+    }
 
+    
+
+    /**
+     * @param codigo the codigo to set
+     */
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
 
     /**
      * @param nombre the nombre to set
@@ -140,7 +162,10 @@ public class Revista {
         this.editor = editor;
     }
 
-    
+    /**
+     * Crea una nueva revista a partir de un formulario de campos
+     * @param req
+     */
     public Revista (HttpServletRequest req) {
 	super();
 	this.nombre = req.getParameter("nombre");
@@ -151,11 +176,57 @@ public class Revista {
 	this.editor = getCodigoEditor((String) req.getSession().getAttribute("email"));
     }
     
-    public int getCodigoEditor(String email) {
-	SqlConection conexion = new SqlConection();
-	return conexion.consultarEditor(email);
+    /**
+     * Crea una revista a partir de un resultado sql
+     * @param resultado
+     */
+    public Revista(ResultSet resultado) {
+	try {
+	    this.codigo = resultado.getInt(1);
+	    this.nombre= resultado.getString(2);
+	    this.descripcion= resultado.getString(3);
+	    this.etiquetas = resultado.getString(4);
+	    this.cuotaSuscripcion = resultado.getDouble(5);
+	    this.costoDiario= resultado.getDouble(6);
+	    this.categoria= resultado.getInt(7);
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
     }
 
+
+    public Revista leerRevista(String idRevista) {
+	int id = getNumeros(idRevista);
+	ResultSet resultado;
+	Revista revista= null;
+	String sql = "SELECT * FROM Revista WHERE codigo=?";
+	try {
+	    PreparedStatement statementRevista = SqlConection.getConexion().prepareStatement(sql);
+	    statementRevista.setInt(1, id);
+	    resultado = statementRevista.executeQuery();
+	    resultado.next();
+	    revista = new Revista(resultado);
+	} catch (SQLException |NumberFormatException e) {
+	    e.printStackTrace();
+	}
+	System.out.println("Revista leida en la base de datos: "+ revista);
+	return revista;
+    }
+
+    private int getNumeros(String idRevista) {
+	char [] cadena = idRevista.toCharArray();
+	String n ="";
+	for (int i = 0; i < cadena.length; i++) {
+	    if(Character.isDigit(cadena[i]))
+		n+=cadena[i];
+	}
+	return Integer.parseInt(n);
+    }
+
+    public int getCodigoEditor(String email) {
+	SqlConection conexion = new SqlConection();
+	return conexion.consultarCodigoUsuario(email);
+    }
 
 
     public PreparedStatement crearSentencia(int siguienteRevista, int siguientesPermisos) throws SQLException {
