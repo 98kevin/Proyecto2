@@ -180,7 +180,7 @@ public class Perfil extends Usuario{
 	String sqlPerfil = "INSERT INTO Perfil(id_usuario, id_cuenta, hobbies, gustos, fotografia, lugar_de_residencia, numero_de_telefono, genero, idioma)"
 		+ "values (?,?,?,?,?,?,?,?,?)";
         PreparedStatement statementPerfil=null; 
-	 statementPerfil = SqlConection.getConexion().prepareStatement(sqlPerfil);
+	 statementPerfil = SqlConection.conexion.prepareStatement(sqlPerfil);
 	        //ultimo registro en la base de datos
 	        statementPerfil.setInt(1, siguienteRegistro);
 	        statementPerfil.setInt(2, siguienteCuenta);

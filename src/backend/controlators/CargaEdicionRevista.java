@@ -1,7 +1,6 @@
 package backend.controlators;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
 
@@ -15,9 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import backend.SqlConection;
-import exceptions.ErrorCreacionUsuario;
 
-    @MultipartConfig(maxFileSize = 16777215)    //16 Mb
+    @MultipartConfig(maxFileSize = 16777215, location="/home/kevin/eclipse-workspace/Proyecto2/WebContent/RevistasCargadas")    //16 Mb
     @WebServlet("/Vistas/carga-revista")
     public class CargaEdicionRevista extends HttpServlet{
 
@@ -28,18 +26,38 @@ import exceptions.ErrorCreacionUsuario;
 	@Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	// obtenemos la parte del arhivo subido  en esta parte multiple del request
-        Part filePart = request.getPart("file"); //Retrieves <input type="file" name="file">
-        InputStream contenidoRevista = filePart.getInputStream();
-    	try {
-    	    SqlConection conexion = new SqlConection();
-    	    conexion.escribirPublicacion(request, contenidoRevista);
-    	    response.sendRedirect("view-editor.jsp");
-    	} catch (SQLException | ParseException  e) {
-    	    request.setAttribute("error", true);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("RegistroUsuario.jsp");
-                dispatcher.forward(request, response);
-    	    e.printStackTrace();
-    	}
+	    SqlConection conexion = new SqlConection();
+        	try {
+        	    response.setContentType("text/html;charset=UTF-8");
+                    Part part = request.getPart("file");
+                    part.write(getFileName(part));
+                    conexion.escribirPublicacion(request, getFileName(part));
+        	    response.sendRedirect("view-editor.jsp");
+        	} catch (SQLException | ParseException  e) {
+        	    request.setAttribute("error", true);
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("RegistroUsuario.jsp");
+                    dispatcher.forward(request, response);
+        	    e.printStackTrace();
+        	}
         }
+	
+	
+	/**
+	 * Devuleve el nombre del archivo de la parte que se esta subiendo
+	 * @param part
+	 * @return
+	 */
+	 public String getFileName(Part part) {
+	        String contentHeader = part.getHeader("content-disposition");
+	        String[] subHeaders = contentHeader.split(";");
+	        for(String current : subHeaders) {
+	            if(current.trim().startsWith("filename")) {
+	                int pos = current.indexOf('=');
+	                String fileName = current.substring(pos+1);
+	                return fileName.replace("\"", "");
+	            }
+	        }
+	        return null;
+	    }
 }
 

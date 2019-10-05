@@ -8,8 +8,12 @@ import java.sql.SQLException;
 import javax.servlet.http.HttpServletRequest;
 
 public class Revista implements Serializable {
-    int codigo;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2478993415087589187L;
 
+    private int codigo;
     private String nombre; 
     private String descripcion; 
     private String etiquetas; 
@@ -189,6 +193,7 @@ public class Revista implements Serializable {
 	    this.cuotaSuscripcion = resultado.getDouble(5);
 	    this.costoDiario= resultado.getDouble(6);
 	    this.categoria= resultado.getInt(7);
+	    this.editor= resultado.getInt(9);
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	}
@@ -201,7 +206,7 @@ public class Revista implements Serializable {
 	Revista revista= null;
 	String sql = "SELECT * FROM Revista WHERE codigo=?";
 	try {
-	    PreparedStatement statementRevista = SqlConection.getConexion().prepareStatement(sql);
+	    PreparedStatement statementRevista = SqlConection.conexion.prepareStatement(sql);
 	    statementRevista.setInt(1, id);
 	    resultado = statementRevista.executeQuery();
 	    resultado.next();
@@ -232,7 +237,7 @@ public class Revista implements Serializable {
     public PreparedStatement crearSentencia(int siguienteRevista, int siguientesPermisos) throws SQLException {
 	    String sqlUser = "INSERT INTO Revista (codigo, nombre, descripcion, etiquetas, cuota_suscripcion, id_permisos, costo_por_dia, id_Categoria, id_editor) "
 	    	+ "values (?,?,?,?,?,?,?,?,?)";
-	    PreparedStatement statementRevista = SqlConection.getConexion().prepareStatement(sqlUser);
+	    PreparedStatement statementRevista = SqlConection.conexion.prepareStatement(sqlUser);
 	    	//Siguiente registro en la base de datos
 	        statementRevista.setInt(1, siguienteRevista);
 	        statementRevista.setString(2, this.getNombre());

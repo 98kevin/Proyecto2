@@ -69,7 +69,7 @@ public class Permiso {
     
     public PreparedStatement crearSentencia() throws SQLException {
 	    String statement = "INSERT INTO Permisos values (?,?,?,?)";
-	    PreparedStatement statementPermiso = SqlConection.getConexion().prepareStatement(statement);
+	    PreparedStatement statementPermiso = SqlConection.conexion.prepareStatement(statement);
 	    //Siguiente registro en la base de datos
 	    statementPermiso.setInt(1, this.getCodigo());
 	    statementPermiso.setBoolean(2, this.isSuscripciones());

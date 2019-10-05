@@ -7,9 +7,11 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>Revista</title>
     <%@include file = "/style/style.html" %>
+   <link rel=StyleSheet href="../style/admin-style.css" type="text/css" >
   </head>
   <body>
   <%@include file = "encabezado.html" %>
+  <%@include file = "../encabezados/encabezado-editor.html" %>
   <% Revista revistaSeleccionada = (Revista) session.getAttribute("revista");
   System.out.println("Codigo de la revista " + revistaSeleccionada);
   %>
@@ -17,7 +19,7 @@
     <p><strong>Descripcion: </strong><% out.println(String.valueOf(revistaSeleccionada.getDescripcion())); %></p>
     <p><strong>etiquetas: </strong><% out.println(String.valueOf(revistaSeleccionada.getEtiquetas())); %></p>
     <p><strong>cuota de suscripcion: </strong><% out.println(String.valueOf(revistaSeleccionada.getCuotaSuscripcion())); %></p>
-     <form action="carga-revista" method="post" enctype="multipart/form-data" accept="pdf">
+     <form action="carga-revista" method="post" enctype="multipart/form-data" accept="application/pdf">
     <input type="file" name="file" />
     <input type="date" name="date" />
 	<button type="submit" class="btn btn-primary">Subir nueva edicion</button> 

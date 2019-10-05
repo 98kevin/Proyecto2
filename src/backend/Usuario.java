@@ -81,7 +81,8 @@ public class Usuario {
 	
 	public PreparedStatement crearSentencia( int siguienteRegistro) throws SQLException {
 	    String sqlUser = "INSERT INTO Usuario (id_usuario, nombre, correo_electronico, password, tipo_de_usuario) values (?,?,?,?,?)";
-	    PreparedStatement statementUser = SqlConection.getConexion().prepareStatement(sqlUser);
+	    
+	    PreparedStatement statementUser = SqlConection.conexion.prepareStatement(sqlUser);
 	    	//Siguiente registro en la base de datos
 	        statementUser.setInt(1, siguienteRegistro );
 	        statementUser.setString(2, this.getNombre());
@@ -129,5 +130,6 @@ public class Usuario {
 		    return "error.jsp";
 	    	}
 	}
+	
 	
 }

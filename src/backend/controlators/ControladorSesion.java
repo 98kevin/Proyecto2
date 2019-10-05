@@ -30,7 +30,6 @@ public class ControladorSesion extends HttpServlet{
 	    HttpSession session= request.getSession();
 	    session.setAttribute("email", usuario.getEmail());
 	    session.setAttribute("codigo", new SqlConection().consultarCodigoUsuario(usuario.getEmail()));
-	    System.out.println("Usuario: "+usuario.getEmail());
 	response.sendRedirect(recurso);
     }
 }

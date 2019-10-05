@@ -11,44 +11,12 @@
 		<title>Editor</title>
 	</head>
 	<body>
-	
+	<%@include file = "../encabezados/encabezado-editor.html" %>
 	        <c:if test="${requestScope['exito'] == true}">
 	            <script type="text/javascript">
 	                alert("Registro realizado con exito");
 	            </script>
         	</c:if>
 	
-		<div id="header">
-			<ul class="nav">
-				<li><a href="">Inicio</a></li>
-				<li><a href="">Perfil</a>
-					<ul>
-						<li><a href="">Ver</a></li>
-						<li><a href="">Editar</a></li>
-					</ul>
-				</li>
-				<li><a href="">Revistas</a>
-					<ul>
-						<li><a href="creacion-de-revista.jsp">Crear nueva revista</a></li>
-						<li><a href="revistas-de-editor.jsp">Mis revistas</a></li>
-						<li><a href="">Buscar</a></li>
-					</ul>
-				</li>
-				<li><a href="">Reportes</a>
-					<ul>
-						<li><a href="">Comentarios</a></li>
-						<li><a href="">Suscripciones</a></li>
-						<li><a href="">Me gustas</a></li>
-						<li><a href="">Ganacias</a></li>
-					</ul>
-				</li>
-				<li><a href="">${sessionScope.email} </a>
-					<ul>
-						<li><a href="">Ayuda</a></li>
-						<li><a href="">Salir</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
 	</body>
 </html>

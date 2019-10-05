@@ -1,9 +1,7 @@
 package backend;
 
 public class Main {
-    
-	private static Password password;
-	
+    	
 	public static void main(String args[]) {
 		new Main();
 	}

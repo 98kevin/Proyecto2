@@ -48,7 +48,7 @@ public class Cuenta {
     
     public PreparedStatement crearSentencia() throws SQLException {
 	String sqlUser = "INSERT INTO Cuenta (abonos) values (?)";
-	    PreparedStatement statementUser = SqlConection.getConexion().prepareStatement(sqlUser);
+	    PreparedStatement statementUser = SqlConection.conexion.prepareStatement(sqlUser);
 	    	//Siguiente registro en la base de datos
 	        statementUser.setInt(1,0 );
 	   return statementUser;
