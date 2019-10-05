@@ -1,3 +1,4 @@
+
 	<link rel=StyleSheet href="../style/admin-style.css" type="text/css" >
 	
 	<div id="header">
@@ -6,7 +7,7 @@
 				<li><a href="">Revistas</a>
 					<ul>
 						<li><a href="">Todas las revistas</a></li>
-						<li><a href="">Mis revistas</a></li>
+						<li ><a href="">Mis revistas</a></li>
 					</ul>
 				</li>
 				<li><a href="">Suscripciones</a>
@@ -29,3 +30,17 @@
 				</li>
 			</ul>
 		</div>
+		
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		
+	<script> 
+	//id														evento	servlet
+	misRevistas.addEventListener("click", modificarMeGusta);
+	 function modificarMeGusta() {$.get('controladorMeGusta'), function(data) { 
+		 
+ 			alert(data);
+ 			$('#data').text(data);
+ 	};}
+</script>
+		
+		

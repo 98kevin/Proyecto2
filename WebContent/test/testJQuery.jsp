@@ -16,7 +16,7 @@
  </script>
  <button id="boton2">try</button>
  <div id="data"></div> 
-  <script>
+  <script> 
 		 boton2.addEventListener("click", myFunction);
 		 function myFunction() {
 		   alert ("Hello World!");

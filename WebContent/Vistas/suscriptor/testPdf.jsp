@@ -9,6 +9,7 @@
 <body>
 <h1>Carga de mi revista</h1>
 <embed src="../../RevistasCargadas/revista jorunal.pdf" width="1300" height="500">
+<%@include file="panel-revista.jsp" %>
 <footer>
 <br><br><br><br>
 <h5>Copyright R 2019</h5>

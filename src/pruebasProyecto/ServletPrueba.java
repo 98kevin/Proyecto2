@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/test/testQuery")
+@WebServlet("/test/testQuery") //la hubicacion de la vista jsp que llamara al servlet
 public class ServletPrueba extends HttpServlet {
     /**
      * Serializacion
