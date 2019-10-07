@@ -17,7 +17,7 @@ import backend.Perfil;
 /**
  * Servlet implementation class ControladorSuscriptor
  */
-@WebServlet("/Vistas/ControladorSuscriptor")
+@WebServlet("/ControladorSuscriptor")
 public class ControladorSuscriptor extends HttpServlet {
        
     /**

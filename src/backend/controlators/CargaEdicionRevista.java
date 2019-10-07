@@ -31,7 +31,7 @@ import backend.SqlConection;
         	    response.setContentType("text/html;charset=UTF-8");
                     Part part = request.getPart("file");
                     part.write(getFileName(part));
-                    conexion.escribirPublicacion(request, getFileName(part));
+                    conexion.escribirPublicacion(request, getFileName(part)); //aca se escribe el registro del path en la BD
         	    response.sendRedirect("view-editor.jsp");
         	} catch (SQLException | ParseException  e) {
         	    request.setAttribute("error", true);

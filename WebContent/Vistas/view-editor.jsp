@@ -17,6 +17,9 @@
 	                alert("Registro realizado con exito");
 	            </script>
         	</c:if>
+        	
+    <div id="tablaDeResultados"></div>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
 	
 	</body>
 </html>

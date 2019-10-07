@@ -460,17 +460,22 @@ public class SqlConection {
 		 }
 	}
 	
-	public void pagar(int codigoUsuario, int codigoRevista, int idSuscripcion, Date fechaUltimoPago, int cantidadDePagos) {
+	public void pagar(int codigoUsuario, int codigoRevista, int idSuscripcion, Date fechaUltimoPago, int cantidadDePagos,double precioRevista,
+			int porcentajeSistema) {
 		Date nuevaFecha=null;
+		double montoSistema= precioRevista *porcentajeSistema /100;
+		double montoEditor = precioRevista - montoSistema;
 		try {
 		    conexion.setAutoCommit(false);
-		    String sqlSentence = "INSERT INTO Pago(fecha_de_pago, id_usuario, id_suscripcion) values (?,?,?)";
+		    String sqlSentence = "INSERT INTO Pago(fecha_de_pago, id_usuario, id_suscripcion, montoEditor, montoSistema) values (?,?,?,?,?)";
 		    for (int i = 0; i < cantidadDePagos; i++) {
 	    		nuevaFecha= new Date(fechaUltimoPago.getTime() + (2628000000L * (i+1)));  //sumamos la cantidad en milisegundos por cada mes
 			    PreparedStatement stm = conexion.prepareStatement(sqlSentence);
 	    			stm.setDate(1, nuevaFecha);
 	    			stm.setInt(2, codigoUsuario);
 	    			stm.setInt(3, idSuscripcion);
+	    			stm.setDouble(4, montoEditor);
+	    			stm.setDouble(5, montoSistema);
 	    			stm.executeUpdate();
 	    		    transferirDinero(codigoRevista);
 	    	    }
@@ -537,5 +542,37 @@ public class SqlConection {
 	    
 	    prepEditor.executeUpdate();
 	    prepSistema.executeUpdate();
+	}
+
+	public double leerPrecioRevista(int codigoSeleccionado) {
+		double precio =0;
+		String sql = "SELECT cuota_suscripcion from Revista where codigo=?";
+		PreparedStatement stm;
+		try {
+			stm = conexion.prepareStatement(sql);
+			stm.setInt(1, codigoSeleccionado);
+			ResultSet resultadoPrecio = stm.executeQuery();
+			resultadoPrecio.next();
+			precio= resultadoPrecio.getDouble(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return precio;
+	}
+
+	public int leerPorcentajeSistema() {
+		int porcentaje =0;
+		String sql = "SELECT porcentaje_de_ganancia from Sistema";
+		PreparedStatement stm;
+		try {
+			stm = conexion.prepareStatement(sql);
+			ResultSet resultadoPrecio = stm.executeQuery();
+			resultadoPrecio.next();
+			porcentaje= resultadoPrecio.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return porcentaje;
 	}
 }

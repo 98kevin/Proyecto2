@@ -19,9 +19,9 @@
 				<li><a href="">Reportes</a>
 					<ul>
 						<li><a href="">Comentarios</a></li>
-						<li><a href="">Suscripciones</a></li>
+						<li id="reporteSuscripciones"><a href="#">Suscripciones</a></li>
 						<li><a href="">Me gustas</a></li>
-						<li><a href="">Ganacias</a></li>
+						<li id="reporteGanancias"><a href="#">Ganacias</a></li>
 					</ul>
 				</li>
 				<li><a href="">${sessionScope.email} </a>
@@ -32,3 +32,11 @@
 				</li>
 			</ul>
 		</div>
+	<input type="hidden" id="id-usuario" value="${sessionScope.codigo}"/>
+		
+		<script src="../js/editor.js"></script>
+		
+		
+		
+		
+		

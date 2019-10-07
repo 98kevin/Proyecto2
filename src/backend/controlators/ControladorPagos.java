@@ -48,8 +48,9 @@ public class ControladorPagos extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    HttpSession session= request.getSession();
 	    int codigoSeleccionado = (int) session.getAttribute("codigoRevista");
-	    System.out.println("Codigo Seleccionado: "+codigoSeleccionado);
 	    int codigoUsuario= (int) session.getAttribute("codigo");
+	    double precioRevista = 0;
+	    int porcentajeSistama = 0;
 	    int idSuscripcion;
 	    Date fechaUltimoPago=null;
 	    int cantidadDePagos = Integer.parseInt( request.getParameter("cantidad-de-pagos"));
@@ -57,7 +58,9 @@ public class ControladorPagos extends HttpServlet{
 		try {
 		    idSuscripcion = sql.leerCodigoSuscripcion(codigoSeleccionado, codigoUsuario);
 		    fechaUltimoPago = sql.leerUltimoPago(codigoSeleccionado, codigoUsuario);
-		    sql.pagar(codigoUsuario, codigoSeleccionado, idSuscripcion, fechaUltimoPago, cantidadDePagos);
+		    precioRevista = sql.leerPrecioRevista(codigoSeleccionado);
+		    porcentajeSistama = sql.leerPorcentajeSistema();
+		    sql.pagar(codigoUsuario, codigoSeleccionado, idSuscripcion, fechaUltimoPago, cantidadDePagos, precioRevista, porcentajeSistama);
 		} catch (SQLException e) {
 		    e.printStackTrace();
 		}
