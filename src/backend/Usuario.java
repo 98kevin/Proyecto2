@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -129,6 +130,28 @@ public class Usuario {
 	    	default :
 		    return "error.jsp";
 	    	}
+	}
+	
+	public int getIdUsuario(String correo) {
+		ResultSet resultado = null;
+		int codigo = -1;
+		new SqlConection();
+		String sql ="SELECT * FROM Usuario WHERE correo_electronico = ?";
+		PreparedStatement stm;
+		try {
+			stm = SqlConection.conexion.prepareStatement(sql);
+			stm.setString(1, correo);
+			System.out.println("SQl: "+ sql + correo);
+			resultado= stm.executeQuery();
+			resultado.next();
+			codigo = resultado.getInt(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return codigo;
+		
+		
 	}
 	
 	

@@ -5,9 +5,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/Vistas/suscriptor/") //la hubicacion de la vista jsp que llamara al servlet
+@WebServlet("/Vistas/suscriptor/vistaRevista.jsp") //la hubicacion de la vista jsp que llamara al servlet
 public class ControladorMeGusta extends HttpServlet{
-
     
     /**
      * 

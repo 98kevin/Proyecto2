@@ -2,7 +2,9 @@ package backend;
 
 import java.io.InputStream;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -193,4 +195,31 @@ public class Perfil extends Usuario{
 	        statementPerfil.setString(9, this.getIdioma());
 	 return statementPerfil;
     }
+
+	public ResultSet revistasDisponibles(int codigo) {
+		new SqlConection();
+		ResultSet resultados =null;
+		String sql ="SELECT r.codigo, r.nombre, r.descripcion, p.path, p.fecha_de_publicacion, p.idPublicacion"
+				+ " FROM Suscripcion s, Publicacion p, Usuario u, Revista r "
+				+ " WHERE p.codigo_revista = r.codigo "
+				+ " AND r.codigo = s.codigo_revista "
+				+ " AND s.idUsuario = u.id_usuario "
+				+ " AND u.id_usuario= ? "
+				+ " AND p.fecha_de_publicacion > s.fecha_de_inicio  "
+				+ " AND p.fecha_de_publicacion < ( SELECT pa.fecha_de_pago FROM Pago pa "
+												+ " WHERE pa.id_suscripcion=s.id_suscripcion "
+												+ " ORDER BY (fecha_de_pago) DESC LIMIT 1) ";
+		PreparedStatement stm;
+		System.out.println("SQL:"+sql + " con "+ codigo);
+		try {
+			stm = SqlConection.conexion.prepareStatement(sql);
+			stm.setInt(1, codigo);
+			System.out.println("Pasando parametro del codigo: "+ codigo);
+			resultados = stm.executeQuery();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return resultados;
+	}
 }

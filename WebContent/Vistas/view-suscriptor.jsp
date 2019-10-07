@@ -11,6 +11,7 @@
 		<title>Suscriptor</title>
 	</head>
 	<body>
-	
+	<div id="revistas"></div>
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
 	</body>
 </html>
